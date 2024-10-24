@@ -1,5 +1,6 @@
 const Asistencia = require('../models/Asistencia');
 
+// Obtener todas las asistencias de un grupo
 exports.getAsistenciasPorGrupo = async (req, res) => {
     try {
         const asistencias = await Asistencia.findAll({ where: { idGrupo: req.params.idGrupo } });
@@ -9,6 +10,52 @@ exports.getAsistenciasPorGrupo = async (req, res) => {
     }
 };
 
+// Obtener todas las asistencias de un estudiante en un grupo
+exports.getAsistenciasPorEstudiante = async (req, res) => {
+    try {
+        const asistencias = await Asistencia.findAll({ 
+            where: { 
+                idGrupo: req.params.idGrupo, 
+                idEstudiante: req.params.idEstudiante 
+            }
+        });
+        res.json(asistencias);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Obtener las asistencias de un grupo en una fecha específica
+exports.getAsistenciasPorFecha = async (req, res) => {
+    try {
+        const asistencias = await Asistencia.findAll({
+            where: { 
+                idGrupo: req.params.idGrupo,
+                fecha: req.params.fecha
+            }
+        });
+        res.json(asistencias);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Obtener asistencias por estado en un grupo
+exports.getAsistenciasPorEstado = async (req, res) => {
+    try {
+        const asistencias = await Asistencia.findAll({
+            where: { 
+                idGrupo: req.params.idGrupo,
+                estado: req.params.estado
+            }
+        });
+        res.json(asistencias);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Agregar una nueva asistencia
 exports.agregarAsistencia = async (req, res) => {
     try {
         const { fecha, estado, idEstudiante, idGrupo } = req.body;
@@ -19,6 +66,7 @@ exports.agregarAsistencia = async (req, res) => {
     }
 };
 
+// Actualizar una asistencia por su ID
 exports.actualizarAsistencia = async (req, res) => {
     try {
         const { fecha, estado, idEstudiante, idGrupo } = req.body;
@@ -29,6 +77,7 @@ exports.actualizarAsistencia = async (req, res) => {
     }
 };
 
+// Eliminar una asistencia por su ID
 exports.eliminarAsistencia = async (req, res) => {
     try {
         await Asistencia.destroy({ where: { idAsistencia: req.params.idAsistencia } });
