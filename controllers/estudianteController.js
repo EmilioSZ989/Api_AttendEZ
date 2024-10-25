@@ -38,7 +38,7 @@ exports.buscarEstudiantesPorNombre = async (req, res) => {
 // Buscar estudiantes por correo
 exports.buscarEstudiantesPorCorreo = async (req, res) => {
     try {
-        const estudiante = await Estudiante.findOne({ where: { correoElectronico: req.params.correoElectronico } });
+        const estudiante = await Estudiante.findOne({ where: { correo: req.params.correo } });
         if (!estudiante) {
             return res.status(404).json({ message: 'Estudiante no encontrado' });
         }
@@ -51,7 +51,7 @@ exports.buscarEstudiantesPorCorreo = async (req, res) => {
 // Verificar si un estudiante existe por correo
 exports.verificarEstudiantePorCorreo = async (req, res) => {
     try {
-        const estudiante = await Estudiante.findOne({ where: { correoElectronico: req.params.correoElectronico } });
+        const estudiante = await Estudiante.findOne({ where: { correo: req.params.correo } });
         if (estudiante) {
             res.json({ exists: true });
         } else {
@@ -77,19 +77,20 @@ exports.getEstudiantesPorGrupo = async (req, res) => {
 // Agregar un nuevo estudiante
 exports.agregarEstudiante = async (req, res) => {
     try {
-        const { idEstudiante, nombre, correoElectronico, idGrupo } = req.body;
-        const nuevoEstudiante = await Estudiante.create({ idEstudiante, nombre, correoElectronico, idGrupo });
+        const { idEstudiante, nombre, correo, idGrupo } = req.body;
+        const nuevoEstudiante = await Estudiante.create({ idEstudiante, nombre, correo, idGrupo });
         res.status(201).json(nuevoEstudiante);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
+
 // Actualizar un estudiante por su ID
 exports.actualizarEstudiante = async (req, res) => {
     try {
-        const { nombre, correoElectronico, idGrupo } = req.body;
-        await Estudiante.update({ nombre, correoElectronico, idGrupo }, { where: { idEstudiante: req.params.idEstudiante } });
+        const { nombre, correo, idGrupo } = req.body;
+        await Estudiante.update({ nombre, correo, idGrupo }, { where: { idEstudiante: req.params.idEstudiante } });
         res.status(200).json({ message: 'Estudiante actualizado' });
     } catch (error) {
         res.status(400).json({ error: error.message });
