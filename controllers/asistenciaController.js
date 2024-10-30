@@ -55,6 +55,8 @@ exports.getAsistenciasPorEstado = async (req, res) => {
     }
 };
 
+const Asistencia = require('../models/Asistencia');
+
 // Agregar una nueva asistencia
 exports.agregarAsistencia = async (req, res) => {
     const { fecha, estado, idEstudiante, idGrupo } = req.body;
@@ -67,20 +69,21 @@ exports.agregarAsistencia = async (req, res) => {
     try {
         // Verificar que el estudiante y el grupo existen antes de crear la asistencia
         const asistenciaExistente = await Asistencia.findOne({
-            where: { idEstudiante, idGrupo, fecha }
+            where: { idEstudiante, fecha } // Solo verificamos por estudiante y fecha
         });
 
         if (asistenciaExistente) {
             return res.status(409).json({ error: 'Asistencia ya registrada para este estudiante en esta fecha' });
         }
 
-        // Crear la nueva asistencia sin el campo idAsistencia
+        // Crear la nueva asistencia
         const nuevaAsistencia = await Asistencia.create({ fecha, estado, idEstudiante, idGrupo });
         res.status(201).json(nuevaAsistencia);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 
 // Actualizar una asistencia por su ID

@@ -10,7 +10,7 @@ const Asistencia = sequelize.define('Asistencia', {
         defaultValue: () => uuidv4() // Genera un nuevo UUID para cada registro
     },
     fecha: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY, // Se utiliza DATEONLY para evitar duplicados por hora
         allowNull: false,
     },
     estado: {
@@ -34,6 +34,12 @@ const Asistencia = sequelize.define('Asistencia', {
 }, {
     tableName: 'Asistencia',
     timestamps: false,
+    indexes: [
+        {
+            unique: true,
+            fields: ['idEstudiante', 'fecha'] // Índice único para evitar registros duplicados
+        }
+    ]
 });
 
 module.exports = Asistencia;
