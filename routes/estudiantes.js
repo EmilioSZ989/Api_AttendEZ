@@ -12,10 +12,10 @@ router.get('/:idEstudiante', estudianteController.getEstudianteById);
 router.get('/buscar/nombre/:nombre', estudianteController.buscarEstudiantesPorNombre);
 
 // Buscar estudiantes por correo
-router.get('/buscar/correo/:correoElectronico', estudianteController.buscarEstudiantesPorCorreo);
+router.get('/buscar/correo/:correo', estudianteController.buscarEstudiantesPorCorreo);
 
 // Verificar si un estudiante existe por correo
-router.get('/existe/correo/:correoElectronico', estudianteController.verificarEstudiantePorCorreo);
+router.get('/existe/correo/:correo', estudianteController.verificarEstudiantePorCorreo);
 
 // Obtener estudiantes por grupo
 router.get('/grupo/:idGrupo', estudianteController.getEstudiantesPorGrupo);
