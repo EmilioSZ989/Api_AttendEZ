@@ -1,38 +1,39 @@
-// models/Asistencia.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { v4: uuidv4 } = require('uuid'); // Importa la biblioteca UUID
 
 const Asistencia = sequelize.define('Asistencia', {
     idAsistencia: {
-        type: DataTypes.STRING, // Asegúrate de que este tipo coincida con tu DB
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
+        defaultValue: uuidv4() // Genera un UUID por defecto
     },
     fecha: {
         type: DataTypes.DATE,
         allowNull: false,
     },
     estado: {
-        type: DataTypes.BOOLEAN, // Indica si está presente (true) o ausente (false)
+        type: DataTypes.BOOLEAN,
         allowNull: false,
     },
     idEstudiante: {
         type: DataTypes.STRING,
         references: {
-            model: 'Estudiante', // Asegúrate de que esta tabla exista
+            model: 'Estudiante',
             key: 'idEstudiante',
         }
     },
     idGrupo: {
         type: DataTypes.STRING,
         references: {
-            model: 'Grupo', // Asegúrate de que esta tabla exista
+            model: 'Grupo',
             key: 'idGrupo',
         }
     }
 }, {
     tableName: 'Asistencia',
-    timestamps: false, // No se usan los timestamps por defecto
+    timestamps: false,
 });
 
 module.exports = Asistencia;

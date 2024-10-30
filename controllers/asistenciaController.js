@@ -74,13 +74,14 @@ exports.agregarAsistencia = async (req, res) => {
             return res.status(409).json({ error: 'Asistencia ya registrada para este estudiante en esta fecha' });
         }
 
-        // Crear la nueva asistencia
+        // Crear la nueva asistencia sin el campo idAsistencia
         const nuevaAsistencia = await Asistencia.create({ fecha, estado, idEstudiante, idGrupo });
         res.status(201).json(nuevaAsistencia);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Actualizar una asistencia por su ID
 exports.actualizarAsistencia = async (req, res) => {
