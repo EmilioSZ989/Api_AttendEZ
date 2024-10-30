@@ -55,8 +55,6 @@ exports.getAsistenciasPorEstado = async (req, res) => {
     }
 };
 
-const Asistencia = require('../models/Asistencia');
-
 // Agregar una nueva asistencia
 exports.agregarAsistencia = async (req, res) => {
     const { fecha, estado, idEstudiante, idGrupo } = req.body;
