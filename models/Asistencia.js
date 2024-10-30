@@ -7,7 +7,7 @@ const Asistencia = sequelize.define('Asistencia', {
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
-        defaultValue: uuidv4() // Genera un UUID por defecto
+        defaultValue: () => uuidv4() // Genera un nuevo UUID para cada registro
     },
     fecha: {
         type: DataTypes.DATE,
