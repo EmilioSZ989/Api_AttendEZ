@@ -4,15 +4,16 @@ const sequelize = require('../config/database');
 
 const Asistencia = sequelize.define('Asistencia', {
     idAsistencia: {
-        type: DataTypes.STRING, // Cambiado a STRING para coincidir con el modelo E-R
+        type: DataTypes.STRING, // Asegúrate de que este tipo coincida con tu DB
         primaryKey: true,
+        allowNull: false,
     },
     fecha: {
         type: DataTypes.DATE,
         allowNull: false,
     },
     estado: {
-        type: DataTypes.BOOLEAN, // Cambiado a BOOLEAN para indicar presente/ausente
+        type: DataTypes.BOOLEAN, // Indica si está presente (true) o ausente (false)
         allowNull: false,
     },
     idEstudiante: {
@@ -31,7 +32,7 @@ const Asistencia = sequelize.define('Asistencia', {
     }
 }, {
     tableName: 'Asistencia',
-    timestamps: false,
+    timestamps: false, // No se usan los timestamps por defecto
 });
 
 module.exports = Asistencia;

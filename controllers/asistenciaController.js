@@ -13,7 +13,7 @@ exports.getAsistenciasPorGrupo = async (req, res) => {
 // Obtener todas las asistencias de un estudiante en un grupo
 exports.getAsistenciasPorEstudiante = async (req, res) => {
     try {
-        const asistencias = await Asistencia.findAll({ 
+        const asistencias = await Asistencia.findAll({
             where: { 
                 idGrupo: req.params.idGrupo, 
                 idEstudiante: req.params.idEstudiante 
@@ -57,20 +57,45 @@ exports.getAsistenciasPorEstado = async (req, res) => {
 
 // Agregar una nueva asistencia
 exports.agregarAsistencia = async (req, res) => {
+    const { fecha, estado, idEstudiante, idGrupo } = req.body;
+
+    // Validaciones básicas
+    if (!fecha || !estado || !idEstudiante || !idGrupo) {
+        return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
     try {
-        const { fecha, estado, idEstudiante, idGrupo } = req.body;
+        // Verificar que el estudiante y el grupo existen antes de crear la asistencia
+        const asistenciaExistente = await Asistencia.findOne({
+            where: { idEstudiante, idGrupo, fecha }
+        });
+
+        if (asistenciaExistente) {
+            return res.status(409).json({ error: 'Asistencia ya registrada para este estudiante en esta fecha' });
+        }
+
+        // Crear la nueva asistencia
         const nuevaAsistencia = await Asistencia.create({ fecha, estado, idEstudiante, idGrupo });
         res.status(201).json(nuevaAsistencia);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
 // Actualizar una asistencia por su ID
 exports.actualizarAsistencia = async (req, res) => {
+    const { fecha, estado, idEstudiante, idGrupo } = req.body;
+
     try {
-        const { fecha, estado, idEstudiante, idGrupo } = req.body;
-        await Asistencia.update({ fecha, estado, idEstudiante, idGrupo }, { where: { idAsistencia: req.params.idAsistencia } });
+        // Verificar si la asistencia existe
+        const asistencia = await Asistencia.findByPk(req.params.idAsistencia);
+        if (!asistencia) {
+            return res.status(404).json({ error: 'Asistencia no encontrada' });
+        }
+
+        await Asistencia.update({ fecha, estado, idEstudiante, idGrupo }, {
+            where: { idAsistencia: req.params.idAsistencia }
+        });
         res.status(200).json({ message: 'Asistencia actualizada' });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -80,6 +105,11 @@ exports.actualizarAsistencia = async (req, res) => {
 // Eliminar una asistencia por su ID
 exports.eliminarAsistencia = async (req, res) => {
     try {
+        const asistencia = await Asistencia.findByPk(req.params.idAsistencia);
+        if (!asistencia) {
+            return res.status(404).json({ error: 'Asistencia no encontrada' });
+        }
+
         await Asistencia.destroy({ where: { idAsistencia: req.params.idAsistencia } });
         res.status(204).send();
     } catch (error) {
