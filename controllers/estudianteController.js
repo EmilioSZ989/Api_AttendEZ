@@ -37,6 +37,7 @@ exports.buscarEstudiantesPorNombre = async (req, res) => {
 
 // Buscar estudiantes por correo
 exports.buscarEstudiantesPorCorreo = async (req, res) => {
+    console.log("Correo a buscar:", req.params.correo); // Log para ver el correo que se está buscando
     try {
         const estudiante = await Estudiante.findOne({ where: { correo: req.params.correo } });
         if (!estudiante) {
@@ -44,9 +45,11 @@ exports.buscarEstudiantesPorCorreo = async (req, res) => {
         }
         res.json(estudiante);
     } catch (error) {
+        console.error("Error en la búsqueda de estudiante:", error); // Log del error
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Verificar si un estudiante existe por correo
 exports.verificarEstudiantePorCorreo = async (req, res) => {
